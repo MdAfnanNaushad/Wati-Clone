@@ -9,6 +9,66 @@
    ===================================================== */
 @media (max-width: 1024px) {
 
+  /* ---- WA Core ---- */
+  .wa-core__container {
+    grid-template-columns: 1fr;
+    gap: var(--sp-12);
+    text-align: center;
+  }
+
+  .wa-core__content {
+    max-width: 100%;
+  }
+
+  .wa-core__desc {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .wa-core__diagram {
+    justify-content: center;
+  }
+
+  .wa-core__orbit-wrapper {
+    width: 320px;
+    height: 320px;
+  }
+
+  .wa-core__ring--outer {
+    width: 290px;
+    height: 290px;
+  }
+
+  .wa-core__icon {
+    transform: rotate(var(--angle)) translateX(145px) rotate(calc(-1 * var(--angle)));
+  }
+
+  /* ---- Wati AI ---- */
+  /* Keep 2 columns on tablet-landscape, collapse only on smaller screens */
+  .wati-ai__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-4);
+  }
+
+  /* ---- Buyer Journey ---- */
+  .journey__panel-inner {
+    grid-template-columns: 1fr;
+    gap: var(--sp-8);
+    padding: var(--sp-8);
+  }
+
+  .journey__title {
+    font-size: clamp(24px, 4vw, 36px);
+  }
+
+  .journey__ad-card {
+    width: 220px;
+  }
+
+  .journey__flow {
+    justify-content: flex-start;
+  }
+
   /* Nav */
   .nav__cta .btn--outline-dark:first-of-type {
     display: none; /* hide "Book Demo" on smaller screens — keep only "Try for Free" */
@@ -200,7 +260,60 @@
 
   /* ---- Logos ---- */
   .logos {
-    padding: var(--sp-8) 0;
+    padding: var(--sp-12) 0 var(--sp-10);
+  }
+
+  .logos__heading {
+    font-size: 26px;
+    margin-bottom: var(--sp-8);
+  }
+
+  .logos__grid {
+    gap: var(--sp-6);
+  }
+
+  .logos__brand svg {
+    max-width: 90px;
+    height: auto;
+  }
+
+  /* ---- Wati AI — collapse to 1 col on tablet portrait ---- */
+  .wati-ai__grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* ---- Buyer Journey ---- */
+  .journey__tabs {
+    gap: var(--sp-2);
+  }
+
+  .journey__tab {
+    font-size: 10px;
+    padding: 8px 14px;
+  }
+
+  .journey__panel-inner {
+    grid-template-columns: 1fr;
+    padding: var(--sp-6);
+    gap: var(--sp-6);
+  }
+
+  .journey__ad-mockup {
+    display: none;
+  }
+
+  .journey__flow {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .journey__stats {
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+  }
+
+  .journey__stat-divider {
+    display: none;
   }
 
   /* ---- Features ---- */
@@ -295,6 +408,41 @@
 
   .features__card {
     padding: var(--sp-6);
+  }
+
+  /* WA Core mobile */
+  .wa-core__orbit-wrapper {
+    width: 280px;
+    height: 280px;
+  }
+
+  .wa-core__ring--outer {
+    width: 250px;
+    height: 250px;
+  }
+
+  .wa-core__ring--inner {
+    width: 160px;
+    height: 160px;
+  }
+
+  .wa-core__center {
+    width: 80px;
+    height: 80px;
+  }
+
+  .wa-core__center svg {
+    width: 50px;
+    height: 50px;
+  }
+
+  .wa-core__icon {
+    transform: rotate(var(--angle)) translateX(125px) rotate(calc(-1 * var(--angle)));
+  }
+
+  .wa-core__icon-wrap svg {
+    width: 30px;
+    height: 30px;
   }
 
   .features__title,

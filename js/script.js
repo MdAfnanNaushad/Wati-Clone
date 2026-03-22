@@ -314,7 +314,76 @@
 
 
   /* =====================================================
-     9. CONSOLE SIGNATURE
+     9. WATI AI CARD ANIMATIONS
+        IntersectionObserver triggers .wati-ai__card--visible
+        which cascades to bubble animations via CSS
+     ===================================================== */
+  var aiCards = document.querySelectorAll('.wati-ai__card');
+
+  if ('IntersectionObserver' in window && aiCards.length) {
+    var aiObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        // Small stagger between card 1 and card 2
+        var card  = entry.target;
+        var delay = card.classList.contains('wati-ai__card--blue') ? 150 : 0;
+        setTimeout(function () {
+          card.classList.add('wati-ai__card--visible');
+        }, delay);
+        aiObserver.unobserve(card);
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    aiCards.forEach(function (card) {
+      aiObserver.observe(card);
+    });
+  } else {
+    // Fallback
+    aiCards.forEach(function (c) { c.classList.add('wati-ai__card--visible'); });
+  }
+
+
+  /* =====================================================
+     10. BUYER JOURNEY TABS
+        Retriggers CSS animations on each tab switch
+        by briefly removing/re-adding the active class
+     ===================================================== */
+  var journeyTabs   = document.querySelectorAll('.journey__tab');
+  var journeyPanels = document.querySelectorAll('.journey__panel');
+
+  journeyTabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var target = this.getAttribute('data-tab');
+
+      // Update tab states
+      journeyTabs.forEach(function (t) {
+        t.classList.remove('journey__tab--active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      this.classList.add('journey__tab--active');
+      this.setAttribute('aria-selected', 'true');
+
+      // Switch panels — remove active first, then re-add on next frame
+      // This forces CSS animations to retrigger cleanly
+      journeyPanels.forEach(function (p) {
+        p.classList.remove('journey__panel--active');
+      });
+
+      var activePanel = document.querySelector('.journey__panel[data-panel="' + target + '"]');
+      if (activePanel) {
+        // Small rAF delay so browser registers the class removal before re-adding
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            activePanel.classList.add('journey__panel--active');
+          });
+        });
+      }
+    });
+  });
+
+
+  /* =====================================================
+     10. CONSOLE SIGNATURE
      ===================================================== */
   console.log(
     '%cWati Clone ✅  |  BEM + Vanilla JS  |  No frameworks',

@@ -555,60 +555,1367 @@ blockquote { font-style: normal; }
 
 /* =====================================================
    LOGOS — .logos
+   Exact match to official WATI site (Image 2 screenshot):
+   • Large bold dark heading, 2 lines, centered
+   • 5 brand logos evenly spaced in a single row
+   • Clean white background, generous padding
    ===================================================== */
 .logos {
-  padding: var(--sp-12) 0;
-  border-top: 1px solid var(--color-gray-100);
-  border-bottom: 1px solid var(--color-gray-100);
-  overflow: hidden;
+  padding: var(--sp-20) 0 var(--sp-20);
+  background: var(--color-white);
 }
 
 .logos__container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 var(--sp-6);
+  text-align: center;
+}
+
+/*
+  Heading — "Loved and trusted by 16,000+ businesses, across the globe"
+  Font: Inter 800, ~44px, dark navy (#0d1117), tight letter-spacing
+  Matches the bold centered heading in screenshot 2 exactly
+*/
+.logos__heading {
+  font-size: clamp(30px, 4.5vw, 48px);
+  font-weight: 800;
+  color: #0d1117;
+  letter-spacing: -0.035em;
+  line-height: 1.18;
+  margin-bottom: var(--sp-12);
+  font-family: var(--font-family);
+}
+
+/*
+  Brand logos — horizontal row, evenly distributed
+  Logos are greyscale by default, colorize on hover
+*/
+.logos__grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(var(--sp-8), 5vw, 64px);
+  flex-wrap: wrap;
+}
+
+.logos__brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Slight greyscale on default to match the muted look in screenshot 1 */
+  filter: grayscale(20%) opacity(0.85);
+  transition: filter var(--ease-base), transform var(--ease-base);
+  cursor: default;
+}
+
+.logos__brand:hover {
+  filter: grayscale(0%) opacity(1);
+  transform: translateY(-2px);
+}
+
+/* =====================================================
+   WHATSAPP CORE — .wa-core
+   Two-column section: bold text left, animated
+   orbit diagram right. Matches wati.io screenshot.
+   ===================================================== */
+.wa-core {
+  padding: var(--sp-20) 0;
+  background: var(--color-white);
+  overflow: hidden;
+}
+
+.wa-core__container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--sp-6);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: var(--sp-16);
+}
+
+/* ---- Left: Text ---- */
+.wa-core__content {
+  max-width: 480px;
+}
+
+.wa-core__title {
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 900;
+  color: #0d1117;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin-bottom: var(--sp-6);
+}
+
+.wa-core__desc {
+  font-size: var(--fs-base);
+  color: var(--color-gray-600);
+  line-height: 1.75;
+  max-width: 420px;
+}
+
+/* ---- Right: Diagram ---- */
+.wa-core__diagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wa-core__orbit-wrapper {
+  position: relative;
+  width: 380px;
+  height: 380px;
+  flex-shrink: 0;
+}
+
+/* ---- Rings ---- */
+.wa-core__ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Outer dashed border ring */
+.wa-core__ring--outer {
+  width: 340px;
+  height: 340px;
+  border: 1.5px dashed rgba(37, 211, 102, 0.35);
+  animation: waCoreRingSpin 28s linear infinite;
+}
+
+/* Inner green glow blob */
+.wa-core__ring--inner {
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(37,211,102,0.22) 0%, rgba(37,211,102,0.06) 60%, transparent 100%);
+  /* No border — just the soft glow from screenshot */
+}
+
+/* ---- WhatsApp center icon ---- */
+.wa-core__center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(37,211,102,0.18) 0%, transparent 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* The key animation — bulge out and shrink, matching the screenshot requirement */
+  animation: waCoreHeartbeat 2.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite;
+  z-index: 2;
+}
+
+.wa-core__center svg {
+  width: 64px;
+  height: 64px;
+  filter: drop-shadow(0 8px 24px rgba(37,211,102,0.45));
+}
+
+/* ---- Orbit icons ---- */
+/*
+  Each icon is positioned using CSS custom property --angle.
+  The icon itself counter-rotates so it always stays upright.
+  The wrapper rotates around the center at the icon's angle.
+*/
+.wa-core__icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* orbit radius = half of outer ring (170px) */
+  width: 0;
+  height: 0;
+  /*
+    Translate along X by the orbit radius,
+    then rotate the whole thing by --angle around center.
+    This places the icon at the correct position on the circle.
+  */
+  transform: rotate(var(--angle)) translateX(170px) rotate(calc(-1 * var(--angle)));
+}
+
+.wa-core__icon-wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  /* Subtle float animation — each icon has staggered delay */
+  animation: waIconFloat 3.5s ease-in-out infinite;
+  filter: drop-shadow(0 4px 14px rgba(0,0,0,0.12));
+  cursor: default;
+  transition: transform var(--ease-base), filter var(--ease-base);
+}
+
+.wa-core__icon-wrap:hover {
+  filter: drop-shadow(0 6px 20px rgba(0,0,0,0.2));
+  transform: translate(-50%, -50%) scale(1.12);
+}
+
+.wa-core__icon-wrap svg {
+  border-radius: 50%;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+}
+
+/* Stagger float delays per icon */
+.wa-core__icon--meta       .wa-core__icon-wrap { animation-delay: 0s; }
+.wa-core__icon--messenger  .wa-core__icon-wrap { animation-delay: 0.5s; }
+.wa-core__icon--google     .wa-core__icon-wrap { animation-delay: 1s; }
+.wa-core__icon--instagram  .wa-core__icon-wrap { animation-delay: 1.5s; }
+.wa-core__icon--rcs        .wa-core__icon-wrap { animation-delay: 2s; }
+.wa-core__icon--facebook   .wa-core__icon-wrap { animation-delay: 2.5s; }
+.wa-core__icon--phone      .wa-core__icon-wrap { animation-delay: 3s; }
+
+.wa-core__icon-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-gray-600);
+  text-align: center;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Phone icon doesn't have a circular bg — it floats freely */
+.wa-core__icon-wrap--phone svg {
+  box-shadow: none;
+  filter: drop-shadow(0 3px 10px rgba(37,211,102,0.4));
+}
+
+/* =====================================================
+   WA-CORE KEYFRAMES
+   ===================================================== */
+
+/*
+  WhatsApp logo heartbeat — bulge out and shrink
+  Matches the "pulsing / bulging" described in request
+*/
+@keyframes waCoreHeartbeat {
+  0%   { transform: translate(-50%, -50%) scale(1);    }
+  14%  { transform: translate(-50%, -50%) scale(1.18); }
+  28%  { transform: translate(-50%, -50%) scale(1);    }
+  42%  { transform: translate(-50%, -50%) scale(1.10); }
+  70%  { transform: translate(-50%, -50%) scale(1);    }
+  100% { transform: translate(-50%, -50%) scale(1);    }
+}
+
+/* Outer ring slow spin */
+@keyframes waCoreRingSpin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Gentle float for orbit icons */
+@keyframes waIconFloat {
+  0%,100% { transform: translate(-50%, -50%) translateY(0px);  }
+  50%      { transform: translate(-50%, -50%) translateY(-6px); }
+}
+
+/* =====================================================
+   WATI AI — .wati-ai
+   "10X your performance with Wati AI"
+   Exact match to screenshot:
+   • Light gray/white bg
+   • Card 1: pink/purple gradient border
+   • Card 2: blue/cyan gradient border
+   • Badge pill floats outside card top
+   • Bubble animations slide in from sides
+   ===================================================== */
+.wati-ai {
+  padding: var(--sp-24) 0;
+  background: #f5f7fa;
+}
+
+.wati-ai__container {
   max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--sp-6);
 }
 
-.logos__label {
+.wati-ai__header {
   text-align: center;
+  max-width: 680px;
+  margin: 0 auto var(--sp-14);
+}
+
+.wati-ai__eyebrow {
+  display: inline-block;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-green);
+  margin-bottom: var(--sp-3);
+}
+
+.wati-ai__title {
+  font-size: clamp(28px, 3.5vw, 46px);
+  font-weight: 900;
+  color: #0d1117;
+  letter-spacing: -0.04em;
+  line-height: 1.12;
+  margin-bottom: var(--sp-4);
+}
+
+.wati-ai__subtitle {
+  font-size: var(--fs-base);
+  color: var(--color-gray-500);
+  line-height: 1.7;
+}
+
+/* ---- Cards grid ---- */
+.wati-ai__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-6);
+  width: 100%;
+}
+
+/*
+  Cards — match screenshot exactly:
+  • White background
+  • Colored border (gradient from top, solid sides/bottom)
+  • Rounded corners 24px
+  • Card appears with fadeUp animation when scrolled into view
+*/
+.wati-ai__card {
+  background: var(--color-white);
+  border-radius: 24px;
+  overflow: visible; /* allow badge to overflow top */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  /* Default state — hidden before animation */
+  opacity: 0;
+  transform: translateY(32px);
+  transition: box-shadow var(--ease-base), transform var(--ease-slow);
+}
+
+/* Animate in when JS adds .wati-ai__card--visible */
+.wati-ai__card--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Card 1 — pink/purple gradient border like screenshot */
+.wati-ai__card--pink {
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  box-shadow:
+    0 0 0 2px #e879f9,          /* pink/purple outer glow border */
+    0 8px 32px rgba(232,121,249,0.15);
+  transition-delay: 0s;
+}
+
+.wati-ai__card--pink:hover {
+  box-shadow:
+    0 0 0 2px #c026d3,
+    0 16px 48px rgba(192,38,211,0.2);
+}
+
+/* Card 2 — blue/cyan border like screenshot */
+.wati-ai__card--blue {
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  box-shadow:
+    0 0 0 2px #22d3ee,          /* cyan/blue outer border */
+    0 8px 32px rgba(34,211,238,0.15);
+  transition-delay: 0.15s;
+}
+
+.wati-ai__card--blue:hover {
+  box-shadow:
+    0 0 0 2px #0891b2,
+    0 16px 48px rgba(8,145,178,0.2);
+}
+
+/* ---- Badge pill — floats at top of card ---- */
+.wati-ai__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: 14px 24px;
+  border-radius: var(--radius-full);
+  margin: -1px -1px 0;          /* sits flush against card top */
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  width: 100%;
+}
+
+/* Pink badge background */
+.wati-ai__badge--pink {
+  background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%);
+  border-bottom: 1px solid #f5d0fe;
+}
+
+/* Blue badge background */
+.wati-ai__badge--blue {
+  background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%);
+  border-bottom: 1px solid #a5f3fc;
+}
+
+.wati-ai__badge-label {
   font-size: var(--fs-sm);
   font-weight: 500;
+  color: var(--color-gray-600);
+  line-height: 1.4;
+}
+
+/* Big stat number in badge */
+.wati-ai__badge-stat {
+  font-size: 48px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  margin-left: auto;
+}
+
+.wati-ai__badge-stat--pink {
+  color: #e879f9;
+}
+
+.wati-ai__badge-stat--blue {
+  color: #22d3ee;
+}
+
+/* ---- Chat area ---- */
+.wati-ai__chat {
+  padding: var(--sp-6);
+  background: #f8fafc;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  min-height: 260px;
+}
+
+/*
+  Bubbles — pill-shaped, slide in from sides
+  Left bubbles come from left, right bubbles from right
+  Each has a staggered delay via nth-child
+*/
+.wati-ai__bubble {
+  max-width: 80%;
+  padding: 12px 18px;
+  border-radius: 20px;
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  /* Hidden before animation */
+  opacity: 0;
+}
+
+/* When card is visible, trigger bubble animations */
+.wati-ai__card--visible .wati-ai__bubble--left {
+  animation: bubbleFromLeft 0.45s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+
+.wati-ai__card--visible .wati-ai__bubble--right {
+  animation: bubbleFromRight 0.45s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+
+/* Stagger each bubble */
+.wati-ai__card--visible .wati-ai__bubble:nth-child(1) { animation-delay: 0.3s; }
+.wati-ai__card--visible .wati-ai__bubble:nth-child(2) { animation-delay: 0.55s; }
+.wati-ai__card--visible .wati-ai__bubble:nth-child(3) { animation-delay: 0.80s; }
+.wati-ai__card--visible .wati-ai__bubble:nth-child(4) { animation-delay: 1.05s; }
+
+/* Left bubble — white, aligns left */
+.wati-ai__bubble--left {
+  align-self: flex-start;
+  background: var(--color-white);
+  color: #1a1a1a;
+  border-bottom-left-radius: 5px;
+}
+
+/* Right bubble — green tinted, aligns right */
+.wati-ai__bubble--right {
+  align-self: flex-end;
+  background: #dcf8c6;
+  color: #1a1a1a;
+  border-bottom-right-radius: 5px;
+}
+
+/* Card 2 specific bubble colors (lighter greens like screenshot) */
+.wati-ai__bubble--green-light {
+  background: #d1fae5;
+}
+
+.wati-ai__bubble--green-mid {
+  background: #a7f3d0;
+}
+
+/* ---- Lead card (card 1 only) ---- */
+.wati-ai__lead {
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-4);
+  box-shadow: var(--shadow-sm);
+  /* Bubbles stagger includes lead as 3rd child */
+  opacity: 0;
+}
+
+.wati-ai__card--visible .wati-ai__lead {
+  animation: bubbleFromLeft 0.45s cubic-bezier(0.34,1.56,0.64,1) 0.80s forwards;
+}
+
+.wati-ai__lead-header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-3);
+}
+
+.wati-ai__lead-fire {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.wati-ai__lead-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.wati-ai__lead-name {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: #0d1117;
+}
+
+.wati-ai__lead-company {
+  font-size: var(--fs-xs);
+  color: var(--color-gray-500);
+  margin-top: 2px;
+}
+
+.wati-ai__lead-scores {
+  display: flex;
+  gap: var(--sp-4);
+  flex-shrink: 0;
+}
+
+.wati-ai__lead-score-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+}
+
+.wati-ai__score-lbl {
+  font-size: 10px;
+  font-weight: 600;
   color: var(--color-gray-400);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
+}
+
+.wati-ai__score-val {
+  font-size: var(--fs-lg);
+  font-weight: 800;
+  color: #0d1117;
+  line-height: 1;
+}
+
+.wati-ai__score-val--hot {
+  color: #dc2626;
+}
+
+.wati-ai__lead-tags {
+  display: flex;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-3);
+}
+
+.wati-ai__tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.wati-ai__tag--dark {
+  background: #1a1a1a;
+  color: var(--color-white);
+}
+
+.wati-ai__lead-details {
+  font-size: 11px;
+  color: var(--color-gray-500);
+  line-height: 1.8;
+}
+
+.wati-ai__lead-details strong {
+  color: var(--color-gray-700);
+  font-weight: 600;
+}
+
+/* ---- Card footer ---- */
+.wati-ai__card-footer {
+  padding: var(--sp-6) var(--sp-6) var(--sp-7);
+  text-align: center;
+  border-top: 1px solid var(--color-gray-100);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.wati-ai__card-title {
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+  color: #0d1117;
+  letter-spacing: -0.03em;
+}
+
+.wati-ai__card-desc {
+  font-size: var(--fs-sm);
+  color: var(--color-gray-500);
+  line-height: 1.6;
+  max-width: 320px;
+}
+
+/* =====================================================
+   WATI AI KEYFRAME ANIMATIONS
+   ===================================================== */
+
+/* Card entrance — fade up */
+@keyframes watiCardIn {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Bubble slides in from left */
+@keyframes bubbleFromLeft {
+  from { opacity: 0; transform: translateX(-28px) scale(0.95); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+/* Bubble slides in from right */
+@keyframes bubbleFromRight {
+  from { opacity: 0; transform: translateX(28px) scale(0.95); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+/* =====================================================
+   BUYER JOURNEY — .journey
+   Exact match to wati.io screenshot:
+   • White bg section, big bold heading
+   • 3 tab switcher pills (black active)
+   • Panel: LIGHT BLUE bg (#e8f4ff), rounded 20px
+   • Left: label + title + cyan outline bullets + cyan stats + outline CTA btn
+   • Right: flow pills + ad card mockup + cyan circle + chat bubbles
+   ===================================================== */
+.journey {
+  padding: var(--sp-20) 0 var(--sp-24);
+  background: var(--color-white);
+}
+
+.journey__container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--sp-6);
+}
+
+/* ---- Heading ---- */
+.journey__header {
+  text-align: center;
+  max-width: 820px;
+  margin: 0 auto var(--sp-8);
+}
+
+.journey__title {
+  font-size: clamp(28px, 4vw, 50px);
+  font-weight: 900;
+  color: #0d1117;
+  letter-spacing: -0.04em;
+  line-height: 1.12;
+}
+
+/* ---- Tab pills ---- */
+.journey__tabs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-6);
+  flex-wrap: wrap;
+}
+
+.journey__tab {
+  padding: 10px 22px;
+  border-radius: var(--radius-full);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--color-gray-500);
+  background: var(--color-gray-100);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: all var(--ease-base);
+  font-family: var(--font-family);
+}
+
+.journey__tab:hover {
+  color: var(--color-black);
+  background: var(--color-gray-200);
+}
+
+.journey__tab--active {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+/* ---- Panel container ---- */
+.journey__panel {
+  display: none;
+  animation: journeyFadeIn 0.35s ease;
+}
+
+.journey__panel--active {
+  display: block;
+}
+
+/* The actual colored box — light blue bg, rounded corners */
+.journey__panel-inner {
+  background: #e8f4ff;
+  border-radius: 20px;
+  padding: var(--sp-10) var(--sp-10);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-10);
+  align-items: start;
+  min-height: 520px;
+}
+
+/* ---- LEFT side ---- */
+.journey__left {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Small uppercase label */
+.journey__section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-gray-500);
+  margin-bottom: var(--sp-4);
+}
+
+/* Big bold title */
+.journey__panel-title {
+  font-size: clamp(22px, 2.5vw, 34px);
+  font-weight: 900;
+  color: #0d1117;
+  letter-spacing: -0.035em;
+  line-height: 1.18;
+  margin-bottom: var(--sp-6);
+}
+
+/* Bullets with cyan outline circle checkmark */
+.journey__bullets {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
   margin-bottom: var(--sp-8);
 }
 
-.logos__track-wrapper {
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
-          mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
-}
-
-.logos__track {
+.journey__bullet {
   display: flex;
-  gap: var(--sp-10);
-  width: max-content;
-  animation: marquee 30s linear infinite;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  font-size: var(--fs-sm);
+  color: #374151;
+  line-height: 1.6;
 }
 
-.logos__track:hover {
-  animation-play-state: paused;
-}
-
-.logos__item {
-  font-size: var(--fs-lg);
-  font-weight: 700;
-  color: var(--color-gray-300);
-  letter-spacing: -0.02em;
-  white-space: nowrap;
+.journey__bullet svg {
   flex-shrink: 0;
-  transition: color var(--ease-base);
-  user-select: none;
+  margin-top: 2px;
 }
 
-.logos__item:hover {
-  color: var(--color-gray-500);
+/* Stats row with vertical dividers */
+.journey__stats {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: var(--sp-6);
+}
+
+.journey__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-right: var(--sp-6);
+}
+
+.journey__stat:not(:first-child) {
+  padding-left: var(--sp-6);
+}
+
+/* Big cyan stat numbers */
+.journey__stat-val {
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 900;
+  color: #22d3ee;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.journey__stat-lbl {
+  font-size: 10px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Vertical divider between stats */
+.journey__stat-divider {
+  width: 1px;
+  height: 52px;
+  background: #bfdbfe;
+  flex-shrink: 0;
+}
+
+/* "See it in Action" — outline style matching screenshot */
+.journey__cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 24px;
+  border-radius: var(--radius-full);
+  border: 2px solid #0d1117;
+  background: transparent;
+  color: #0d1117;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: all var(--ease-base);
+  text-decoration: none;
+  align-self: flex-start;
+}
+
+.journey__cta-btn:hover {
+  background: #0d1117;
+  color: var(--color-white);
+  transform: translateY(-1px);
+}
+
+/* ---- RIGHT side ---- */
+.journey__right {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  position: relative;
+}
+
+/* Flow pills: AD → CHAT → CHAT → CONVERT */
+.journey__flow {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  justify-content: flex-end;
+  margin-bottom: var(--sp-2);
+  flex-wrap: wrap;
+}
+
+.journey__flow-pill {
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+/* Cyan filled pills */
+.journey__flow-pill--active {
+  background: #22d3ee;
+  color: #0d1117;
+}
+
+/* Last pill (CONVERT) — slightly darker */
+.journey__flow-pill--convert {
+  background: #0891b2;
+  color: var(--color-white);
+}
+
+/* ---- Ad mockup ---- */
+.journey__ad-mockup {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+/* Meta floating icon — top left of card */
+.journey__ad-meta-icon {
+  position: absolute;
+  left: -10px;
+  top: 20px;
+  z-index: 3;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.12));
+}
+
+/* Google floating icon — right side of card */
+.journey__ad-google-icon {
+  position: absolute;
+  right: -16px;
+  bottom: 20px;
+  z-index: 3;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.10));
+}
+
+/* The white Facebook-style ad card */
+.journey__ad-card {
+  background: var(--color-white);
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  width: 260px;
+  overflow: hidden;
+  z-index: 2;
+  position: relative;
+}
+
+.journey__ad-brand-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 10px 12px 8px;
+}
+
+.journey__ad-brand-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #6b7280;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.journey__ad-brand-name {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: #0d1117;
+}
+
+.journey__ad-brand-sub {
+  font-size: 10px;
+  color: var(--color-gray-400);
+}
+
+.journey__ad-dots {
+  margin-left: auto;
+  color: var(--color-gray-400);
+  font-size: var(--fs-base);
+  letter-spacing: 1px;
+}
+
+/* Coffee image area */
+.journey__ad-image {
+  position: relative;
+  width: 100%;
+  height: 130px;
+}
+
+.journey__ad-image-bg {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #3d1a08 0%, #7c3f1a 40%, #2d0f05 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+}
+
+/* Green WhatsApp send button floating on image */
+.journey__send-btn {
+  position: absolute;
+  bottom: -14px;
+  right: 12px;
+  background: #25D366;
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 8px 16px;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  cursor: pointer;
+  font-family: var(--font-family);
+  box-shadow: 0 4px 12px rgba(37,211,102,0.4);
+  white-space: nowrap;
+  z-index: 4;
+}
+
+.journey__ad-footer {
+  padding: 20px 12px 10px;
+}
+
+.journey__ad-url {
+  font-size: 10px;
+  color: var(--color-gray-400);
+  margin-bottom: 2px;
+}
+
+.journey__ad-brand-title {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: #0d1117;
+  margin-bottom: var(--sp-3);
+}
+
+.journey__ad-platform-icons {
+  display: flex;
+  gap: var(--sp-2);
+}
+
+/* ---- Chat area with cyan circle bg ---- */
+.journey__chat-area {
+  position: relative;
+  margin-top: var(--sp-2);
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+}
+
+.journey__chat-area--full {
+  min-height: 220px;
+  margin-top: var(--sp-4);
+}
+
+/* The big cyan soft circle in background */
+.journey__chat-circle {
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: rgba(34,211,238,0.18);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.journey__chat-area--full .journey__chat-circle {
+  width: 300px;
+  height: 300px;
+  bottom: -40px;
+  right: -30px;
+}
+
+/* Chat messages layered above the circle */
+.journey__chat-msgs {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  width: 100%;
+  padding: var(--sp-2) 0;
+}
+
+/* Individual message bubbles */
+.journey__msg {
+  max-width: 80%;
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* Incoming — green tint (matching screenshot) */
+.journey__msg--in {
+  align-self: flex-start;
+  background: #b2f5ea;
+  color: #0d1117;
+  border-bottom-left-radius: 4px;
+}
+
+/* Outgoing — white */
+.journey__msg--out {
+  align-self: flex-end;
+  background: var(--color-white);
+  color: #0d1117;
+  border-bottom-right-radius: 4px;
+}
+
+/* Sparkle decoration */
+.journey__sparkle {
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  font-size: 18px;
+  color: #22d3ee;
+  opacity: 0.7;
+  z-index: 2;
+  animation: sparklePulse 2s ease-in-out infinite;
+}
+
+@keyframes sparklePulse {
+  0%,100% { opacity: 0.5; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.3); }
+}
+
+@keyframes journeyFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =====================================================
+   JOURNEY — SALES & SUPPORT PANEL SPECIFIC STYLES
+   Exact match to wati.io screenshots
+   ===================================================== */
+
+/* ── Pink panel (Sales) ── */
+.journey__panel-inner--pink {
+  background: #fce7f3;
+}
+
+/* Sales panel flips columns: visual LEFT, text RIGHT */
+.journey__panel-inner--pink {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* ── Yellow panel (Support) ── */
+.journey__panel-inner--yellow {
+  background: #fefce8;
+}
+
+/* ── Colored stat values ── */
+.journey__stat-val--pink   { color: #f472b6; }
+.journey__stat-val--yellow { color: #eab308; }
+
+/* ── Colored stat dividers ── */
+.journey__stat-divider--pink   { background: #fbcfe8; }
+.journey__stat-divider--yellow { background: #fef08a; }
+
+/* ── Pink flow pills ── */
+.journey__flow-pill--pink {
+  background: #fce7f3;
+  color: #be185d;
+  border: 1.5px solid #f9a8d4;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+/* ── Yellow flow pills ── */
+.journey__flow-pill--yellow {
+  background: #fef9c3;
+  color: #854d0e;
+  border: 1.5px solid #fde047;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+/* ── Action chips (sales panel) ── */
+.journey__chips {
+  display: flex;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-2);
+}
+
+.journey__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid #e5e7eb;
+  background: rgba(255,255,255,0.85);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+}
+
+/* ── Pink circle bg for sales chat ── */
+.journey__chat-circle--pink {
+  background: rgba(244, 114, 182, 0.15);
+}
+
+/* ── Yellow circle bg for support chat ── */
+.journey__chat-circle--yellow {
+  background: rgba(234, 179, 8, 0.15);
+}
+
+/* ── Bubble variants ── */
+
+/* Green pill bubble — incoming in sales & support */
+.journey__msg--green-pill {
+  background: #bbf7d0;
+  color: #065f46;
+  border-radius: 20px;
+  border-bottom-left-radius: 5px;
+}
+
+/* White bubble — outgoing in sales */
+.journey__msg--white-pill {
+  background: var(--color-white);
+  color: #1a1a1a;
+  border-radius: 20px;
+  border-bottom-right-radius: 5px;
+  flex-direction: column;
+  gap: var(--sp-2);
+  display: flex;
+}
+
+/* Lavender bubble — outgoing in support */
+.journey__msg--lavender-pill {
+  background: #f3e8ff;
+  color: #1a1a1a;
+  border-radius: 20px;
+  border-bottom-right-radius: 5px;
+}
+
+/* Small annotation text below bubble */
+.journey__msg-note {
+  display: block;
+  font-size: 10px;
+  color: var(--color-gray-400);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+.journey__msg-note strong {
+  color: var(--color-gray-600);
+}
+
+/* ── Support tags: MULTILINGUAL / CONTEXTUAL / EMPATHETIC ── */
+.journey__support-tags {
+  display: flex;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  margin-top: var(--sp-4);
+  position: relative;
+  z-index: 2;
+}
+
+.journey__support-tag {
+  padding: 7px 16px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 2px solid transparent;
+}
+
+.journey__support-tag--teal {
+  background: #ccfbf1;
+  color: #0f766e;
+  border-color: #5eead4;
+}
+
+.journey__support-tag--yellow {
+  background: #fef9c3;
+  color: #854d0e;
+  border-color: #fde047;
+}
+
+.journey__support-tag--pink {
+  background: #fce7f3;
+  color: #be185d;
+  border-color: #f9a8d4;
+}
+
+/* ── Chat bubble FADE-IN animations ── */
+/*
+  When the journey panel becomes active (journey__panel--active),
+  messages animate in from their respective sides.
+  Left messages slide from left, right messages from right.
+*/
+.journey__panel--active .journey__msg--in,
+.journey__panel--active .journey__msg--green-pill {
+  animation: msgFromLeft 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.journey__panel--active .journey__msg--out,
+.journey__panel--active .journey__msg--white-pill,
+.journey__panel--active .journey__msg--lavender-pill {
+  animation: msgFromRight 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Stagger each message */
+.journey__panel--active .journey__chat-msgs > *:nth-child(1) { animation-delay: 0.1s; }
+.journey__panel--active .journey__chat-msgs > *:nth-child(2) { animation-delay: 0.3s; }
+.journey__panel--active .journey__chat-msgs > *:nth-child(3) { animation-delay: 0.5s; }
+.journey__panel--active .journey__chat-msgs > *:nth-child(4) { animation-delay: 0.7s; }
+.journey__panel--active .journey__chat-msgs > *:nth-child(5) { animation-delay: 0.9s; }
+
+/* Panel content fade-in on activation */
+.journey__panel--active .journey__panel-inner {
+  animation: journeyPanelIn 0.4s ease both;
+}
+
+.journey__panel--active .journey__left {
+  animation: fadeUp 0.45s ease 0.05s both;
+}
+
+/* Chips fade in one by one */
+.journey__panel--active .journey__chip:nth-child(1) { animation: fadeUp 0.3s ease 0.15s both; }
+.journey__panel--active .journey__chip:nth-child(2) { animation: fadeUp 0.3s ease 0.25s both; }
+.journey__panel--active .journey__chip:nth-child(3) { animation: fadeUp 0.3s ease 0.35s both; }
+
+/* Support tags */
+.journey__panel--active .journey__support-tag:nth-child(1) { animation: fadeUp 0.3s ease 0.8s both; }
+.journey__panel--active .journey__support-tag:nth-child(2) { animation: fadeUp 0.3s ease 0.95s both; }
+.journey__panel--active .journey__support-tag:nth-child(3) { animation: fadeUp 0.3s ease 1.1s both; }
+
+/* ── Keyframes ── */
+@keyframes msgFromLeft {
+  from { opacity: 0; transform: translateX(-26px) scale(0.95); }
+  to   { opacity: 1; transform: translateX(0)    scale(1);    }
+}
+
+@keyframes msgFromRight {
+  from { opacity: 0; transform: translateX(26px) scale(0.95); }
+  to   { opacity: 1; transform: translateX(0)    scale(1);    }
+}
+
+@keyframes journeyPanelIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* Also apply to marketing panel bubbles */
+.journey__panel--active .journey__msg--in {
+  animation: msgFromLeft 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.journey__panel--active .journey__msg--out {
+  animation: msgFromRight 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 /* =====================================================
