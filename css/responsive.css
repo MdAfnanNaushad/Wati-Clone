@@ -1,0 +1,10 @@
+@media (max-width: 768px) {
+  .hero__container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .features__container {
+    grid-template-columns: 1fr;
+  }
+}
