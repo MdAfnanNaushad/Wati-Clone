@@ -1,24 +1,372 @@
-@media (max-width: 768px) {
-  .nav__menu {
-    display: none;
-    flex-direction: column;
+/* =====================================================
+   WATI CLONE — responsive.css
+   BEM naming | Mobile-first breakpoints
+   Breakpoints: 1024px | 768px | 480px
+   ===================================================== */
+
+/* =====================================================
+   TABLET-LANDSCAPE (≤ 1024px)
+   ===================================================== */
+@media (max-width: 1024px) {
+
+  /* Nav */
+  .nav__cta .btn--outline-dark:first-of-type {
+    display: none; /* hide "Book Demo" on smaller screens — keep only "Try for Free" */
   }
 
-  .nav__menu.active {
+  /* Hero */
+  .hero__title {
+    font-size: clamp(44px, 7vw, 72px);
+  }
+
+  /* Features */
+  .features__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* How it works */
+  .how-it-works__steps {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .how-it-works__connector {
+    width: 2px;
+    height: 32px;
+    align-self: center;
+  }
+
+  .how-it-works__connector::before {
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--color-green-bright), var(--color-green));
+  }
+
+  .how-it-works__connector::after {
+    content: '▼';
+    right: auto;
+    left: 50%;
+    top: 100%;
+    transform: translateX(-50%);
+    font-size: 10px;
+  }
+
+  /* Testimonials */
+  .testimonials__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .testimonials__card:last-child {
+    grid-column: 1 / -1;
+    max-width: 480px;
+    justify-self: center;
+  }
+
+  /* Pricing */
+  .pricing__grid {
+    grid-template-columns: 1fr;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .pricing__card--popular {
+    transform: scale(1);
+    order: -1;
+  }
+
+  .pricing__card--popular:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Footer */
+  .footer__top {
+    flex-direction: column;
+    gap: var(--sp-10);
+  }
+
+  .footer__brand {
+    width: 100%;
+  }
+
+  .footer__links {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* =====================================================
+   TABLET-PORTRAIT (≤ 768px)
+   ===================================================== */
+@media (max-width: 768px) {
+
+  /* ---- Mobile Nav ---- */
+  .nav__menu {
+    /* Slide-in drawer */
+    position: fixed;
+    inset: 0;
+    background: var(--color-white);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: calc(var(--nav-height) + 16px) var(--sp-6) var(--sp-8);
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform var(--ease-base);
+    z-index: 998;
+    gap: 0;
+    border-right: none;
+  }
+
+  .nav__menu--open {
+    transform: translateX(0);
+  }
+
+  .nav__item {
+    width: 100%;
+    border-bottom: 1px solid var(--color-gray-100);
+  }
+
+  .nav__link {
+    width: 100%;
+    font-size: var(--fs-base);
+    padding: var(--sp-4) var(--sp-2);
+    border-radius: 0;
+    justify-content: space-between;
+  }
+
+  /* Mobile dropdown — static, toggle via JS class */
+  .nav__dropdown {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+    padding: var(--sp-2) 0 var(--sp-2) var(--sp-4);
+    flex-direction: column;
+    gap: var(--sp-2);
+    background: var(--color-gray-50);
+    pointer-events: all;
+    min-width: unset;
+    display: none; /* hidden by default on mobile */
+  }
+
+  .nav__item--dropdown-open .nav__dropdown {
     display: flex;
   }
 
-  .nav__toggle {
-    display: block;
+  .nav__cta {
+    display: none; /* hidden on mobile, shown in drawer if needed */
   }
 
-  .hero__container {
+  .nav__hamburger {
+    display: flex;
+    z-index: 999;
+  }
+
+  /* ---- Hero ---- */
+  .hero {
+    padding-top: calc(var(--nav-height) + 48px);
+    padding-bottom: 60px;
+  }
+
+  .hero__title {
+    font-size: clamp(40px, 10vw, 60px);
+    gap: 8px;
+  }
+
+  .hero__highlight {
+    padding: 0 12px 4px;
+    border-radius: 10px;
+  }
+
+  .hero__subtitle {
+    font-size: var(--fs-base);
+  }
+
+  .hero__subtitle br {
+    display: none;
+  }
+
+  .hero__actions {
     flex-direction: column;
-    text-align: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .hero__actions .btn {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  /* ---- Logos ---- */
+  .logos {
+    padding: var(--sp-8) 0;
+  }
+
+  /* ---- Features ---- */
+  .features__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .features__title,
+  .how-it-works__title,
+  .testimonials__title,
+  .pricing__title,
+  .cta-banner__title {
+    font-size: var(--fs-3xl);
+  }
+
+  /* ---- Stats ---- */
+  .stats__container {
+    flex-wrap: wrap;
+  }
+
+  .stats__divider {
+    display: none;
+  }
+
+  .stats__item {
+    flex: 1 1 45%;
+    min-width: 120px;
+  }
+
+  /* ---- Testimonials ---- */
+  .testimonials__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .testimonials__card:last-child {
+    grid-column: auto;
+    max-width: 100%;
+  }
+
+  /* ---- CTA ---- */
+  .cta-banner__actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cta-banner__actions .btn {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  /* ---- Footer ---- */
+  .footer__links {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-6);
+  }
+
+  .footer__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer__legal {
+    flex-wrap: wrap;
+    gap: var(--sp-3);
   }
 }
-@media (max-width: 768px) {
-  .features__container {
+
+/* =====================================================
+   MOBILE (≤ 480px)
+   ===================================================== */
+@media (max-width: 480px) {
+
+  .hero__title {
+    font-size: clamp(34px, 9vw, 48px);
+    gap: 4px;
+  }
+
+  .hero__highlight {
+    padding: 0 10px 3px;
+    border-radius: 8px;
+  }
+
+  .hero__proof {
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+
+  .hero__proof-pill {
+    font-size: var(--fs-xs);
+    padding: 8px 16px;
+  }
+
+  .features__card {
+    padding: var(--sp-6);
+  }
+
+  .features__title,
+  .how-it-works__title,
+  .testimonials__title,
+  .pricing__title {
+    font-size: var(--fs-2xl);
+  }
+
+  .cta-banner__title {
+    font-size: var(--fs-3xl);
+  }
+
+  .stats__item {
+    flex: 1 1 100%;
+  }
+
+  .stats__value {
+    font-size: var(--fs-3xl);
+  }
+
+  .how-it-works__step {
+    padding: var(--sp-6);
+  }
+
+  .testimonials__card {
+    padding: var(--sp-6);
+  }
+
+  .pricing__amount {
+    font-size: 44px;
+  }
+
+  .footer__links {
     grid-template-columns: 1fr;
+    gap: var(--sp-8);
+  }
+
+  .footer__bottom {
+    gap: var(--sp-3);
+  }
+}
+
+/* =====================================================
+   HOVER ONLY — disable hover transforms on touch
+   ===================================================== */
+@media (hover: none) {
+  .features__card:hover,
+  .how-it-works__step:hover,
+  .testimonials__card:hover,
+  .btn--green:hover,
+  .btn--outline-dark:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* =====================================================
+   REDUCED MOTION
+   ===================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .logos__track {
+    animation: none;
+  }
+
+  .hero__highlight {
+    animation: none;
   }
 }
