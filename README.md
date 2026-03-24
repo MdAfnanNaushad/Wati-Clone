@@ -124,4 +124,4 @@ python3 -m http.server 8080
 
 ---
 
-*Submitted by: [Your Name] | [Your Email] | March 2026*
+*Submitted by: Md Afnan Naushad | mdafnannaushad@gmail.com | March 2026*
