@@ -1,4 +1,4 @@
-# Wati Landing Page Clone
+# Wati 
 
 A pixel-accurate recreation of [wati.io/lp/home](https://www.wati.io/lp/home) built with **pure HTML, CSS, and Vanilla JavaScript** — no frameworks, no build tools.
 
